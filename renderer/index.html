@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Facturas - DOKAMA</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== Sprite de ícones (SVG inline) ===================== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true" focusable="false">
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">D</span>
+      <span class="brand-text">
+        Gerador de Facturas
+        <span class="subtitle">DOKAMA &mdash; Lda</span>
+      </span>
+      <!-- Indicador de alterações não guardadas -->
+      <span class="dirty-dot" id="dirtyDot" role="status" aria-live="polite"
+            title="Há alterações que ainda não foram guardadas"></span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" id="btnNovo" title="Nova factura (Ctrl + N)">
+        <svg class="ico" aria-hidden="true"><use href="#i-plus"></use></svg>
+        <span>Nova</span>
+      </button>
+      <button class="btn btn-outline" id="btnAbrir" title="Abrir rascunho guardado (Ctrl + O)">
+        <svg class="ico" aria-hidden="true"><use href="#i-folder"></use></svg>
+        <span>Abrir</span>
+      </button>
+      <button class="btn btn-outline" id="btnGuardar" title="Guardar rascunho em JSON (Ctrl + S)">
+        <svg class="ico" aria-hidden="true"><use href="#i-save"></use></svg>
+        <span>Guardar</span>
+      </button>
+      <button class="btn btn-outline btn-icon-only" id="btnAtalhos" title="Atalhos de teclado (?)"
+              aria-label="Atalhos de teclado">
+        <svg class="ico" aria-hidden="true"><use href="#i-clock"></use></svg>
+      </button>
+      <button class="btn btn-primary" id="btnExportar" title="Exportar factura em PDF (Ctrl + E)">
+        <svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>
+        <span>Exportar PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Tabs de alternância (visíveis apenas em ecrãs pequenos) -->
+  <nav class="view-tabs" id="viewTabs">
+    <button class="view-tab active" id="tabForm" type="button">Editar</button>
+    <button class="view-tab" id="tabPreview" type="button">Pré-visualizar</button>
+  </nav>
+
+  <div class="workspace" id="workspace">
+
+    <!-- Coluna esquerda: formulário -->
+    <aside class="form-panel">
+
+      <!-- Documento -->
+      <section class="section">
+        <h2>
+          <svg class="sec-ico" aria-hidden="true"><use href="#i-doc"></use></svg>
+          <span>Documento</span>
+        </h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="numDoc">N.º Documento</label>
+            <input type="text" id="numDoc" placeholder="FP-2026/001" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="dataDoc">Data</label>
+            <div class="input-ico">
+              <input type="text" id="dataDoc" placeholder="dd/mm/aaaa" autocomplete="off">
+              <svg class="ico ico-muted" aria-hidden="true"><use href="#i-calendar"></use></svg>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="tipoDoc">Tipo de documento</label>
+          <div class="select-wrap">
+            <select id="tipoDoc">
+              <option value="FACTURA PRO-FORMA">FACTURA PRO-FORMA</option>
+              <option value="FACTURA">FACTURA</option>
+              <option value="FACTURA RECIBO">FACTURA RECIBO</option>
+              <option value="NOTA DE ENCOMENDA">NOTA DE ENCOMENDA</option>
+              <option value="OUTRO">OUTRO (escrever à mão)</option>
+            </select>
+            <svg class="ico ico-muted chevron" aria-hidden="true"><use href="#i-chevron"></use></svg>
+          </div>
+          <input type="text" id="tipoDocOutro" class="mt-6" placeholder="Escreva o tipo de documento" autocomplete="off" hidden>
+        </div>
+      </section>
+
+      <!-- Cliente -->
+      <section class="section">
+        <h2>
+          <svg class="sec-ico" aria-hidden="true"><use href="#i-user"></use></svg>
+          <span>Cliente / Destinatário</span>
+        </h2>
+
+        <!-- Clientes já usados: 1 clique para repetir -->
+        <div class="recentes" id="recentes" hidden>
+          <span class="recentes-label">
+            <svg class="ico" aria-hidden="true"><use href="#i-clock"></use></svg>
+            Repetir cliente
+          </span>
+          <div class="recentes-chips" id="recentesChips"></div>
+        </div>
+
+        <div class="field">
+          <label for="clienteNome">Nome <span class="req" title="Obrigatório">*</span></label>
+          <input type="text" id="clienteNome" placeholder="Fazenda Joselândia"
+                 autocomplete="off" spellcheck="false" required>
+          <p class="field-error" id="erroClienteNome" hidden></p>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="clienteNif">NIF</label>
+            <input type="text" id="clienteNif" placeholder="5000734110"
+                   inputmode="numeric" autocomplete="off" spellcheck="false">
+            <p class="field-error" id="erroClienteNif" hidden></p>
+          </div>
+          <div class="field">
+            <label for="clienteProjecto">Projecto</label>
+            <input type="text" id="clienteProjecto" placeholder="Produção de Suínos" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label for="clienteLocal">Localização</label>
+          <input type="text" id="clienteLocal" placeholder="Talamajamba, Baía Farta, Benguela" autocomplete="off">
+        </div>
+      </section>
+
+      <!-- Produtos / Serviços -->
+      <section class="section">
+        <h2>
+          <svg class="sec-ico" aria-hidden="true"><use href="#i-cart"></use></svg>
+          <span>Produtos / Serviços</span>
+          <span class="count-badge" id="itensCount" hidden></span>
+        </h2>
+        <div class="items-scroll">
+        <table class="items-editor">
+          <thead>
+            <tr>
+              <th class="col-ref">Ref</th>
+              <th>Descrição</th>
+              <th class="col-qtd">Quant</th>
+              <th class="col-un">Un</th>
+              <th class="col-preco">Preço Unit.</th>
+              <th class="col-desc">% Desc</th>
+              <th class="col-total">Valor</th>
+              <th class="col-act"><span class="sr-only">Acções</span></th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"><!-- linhas geridas por JS --></tbody>
+        </table>
+        </div>
+
+        <!-- Estado vazio (mostrado quando não há linhas) -->
+        <div class="items-empty" id="itemsEmpty" hidden>
+          <svg class="ico ico-lg" aria-hidden="true"><use href="#i-cart"></use></svg>
+          <p><strong>Sem produtos nem serviços.</strong></p>
+          <p class="muted">Adiciona a primeira linha para começar a factura.</p>
+          <button class="btn btn-outline" id="btnAddItemEmpty">
+            <svg class="ico" aria-hidden="true"><use href="#i-plus"></use></svg>
+            <span>Adicionar linha</span>
+          </button>
+        </div>
+
+        <div class="items-footer">
+          <button class="btn btn-outline" id="btnAddItem">
+            <svg class="ico" aria-hidden="true"><use href="#i-plus"></use></svg>
+            <span>Adicionar linha</span>
+          </button>
+          <div class="total-line">Total: <span id="totalDisplay">0,00</span> AKZ</div>
+        </div>
+        <p class="hint">
+          <kbd>Enter</kbd> adiciona uma nova linha &middot; <kbd>Shift</kbd> + <kbd>Del</kbd> remove a linha actual.
+          Os valores são calculados automaticamente.
+        </p>
+      </section>
+
+    </aside>
+
+    <!-- Coluna direita: pré-visualização -->
+    <main class="preview-panel">
+      <div class="preview-frame-wrap">
+        <div class="preview-bar">
+          <span class="preview-badge">
+            <svg class="ico" aria-hidden="true"><use href="#i-eye"></use></svg>
+            <span>Pré-visualização</span>
+          </span>
+          <span class="preview-meta">
+            <span class="dot"></span>
+            <span id="previewResumo">A4 &middot; actualiza automaticamente</span>
+          </span>
+        </div>
+
+        <div class="preview-scaler" id="previewScaler">
+          <iframe id="previewFrame" class="preview-frame" title="Pré-visualização da factura"></iframe>
+        </div>
+      </div>
+
+      <!-- Controlos de zoom (flutuantes, à direita) -->
+      <div class="zoom-controls" role="group" aria-label="Zoom da pré-visualização">
+        <button class="zoom-btn" id="btnZoomIn" type="button" title="Aproximar (Ctrl +)">
+          <svg class="ico" aria-hidden="true"><use href="#i-plus"></use></svg>
+        </button>
+        <span class="zoom-value" id="zoomValue">100%</span>
+        <button class="zoom-btn" id="btnZoomOut" type="button" title="Afastar (Ctrl -)">
+          <svg class="ico" aria-hidden="true"><use href="#i-minus"></use></svg>
+        </button>
+        <button class="zoom-btn" id="btnZoomFit" type="button" title="Ajustar à largura / Ecrã inteiro (Esc para sair)">
+          <svg class="ico" aria-hidden="true"><use href="#i-expand"></use></svg>
+        </button>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ===================== Modal de confirmação ===================== -->
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" aria-describedby="modalMsg">
+    <div class="modal-ico" id="modalIco">
+      <svg class="ico ico-lg" aria-hidden="true"><use href="#i-alert"></use></svg>
+    </div>
+    <h3 id="modalTitulo">Confirmar</h3>
+    <p id="modalMsg"></p>
+    <div class="modal-acoes">
+      <button class="btn btn-outline" id="modalCancelar">Cancelar</button>
+      <button class="btn btn-danger-solid" id="modalConfirmar">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Painel de atalhos ===================== -->
+<div class="modal-backdrop" id="atalhosBackdrop" hidden>
+  <div class="modal modal-atalhos" role="dialog" aria-modal="true" aria-labelledby="atalhosTitulo">
+    <div class="atalhos-cab">
+      <h3 id="atalhosTitulo">Atalhos de teclado</h3>
+      <button class="zoom-btn" id="atalhosFechar" aria-label="Fechar" title="Fechar (Esc)">
+        <svg class="ico" aria-hidden="true"><use href="#i-x"></use></svg>
+      </button>
+    </div>
+    <ul class="atalhos-lista">
+      <li><span><kbd>Ctrl</kbd> + <kbd>N</kbd></span><span>Nova factura</span></li>
+      <li><span><kbd>Ctrl</kbd> + <kbd>S</kbd></span><span>Guardar rascunho</span></li>
+      <li><span><kbd>Ctrl</kbd> + <kbd>O</kbd></span><span>Abrir rascunho</span></li>
+      <li><span><kbd>Ctrl</kbd> + <kbd>E</kbd></span><span>Exportar PDF</span></li>
+      <li><span><kbd>Enter</kbd></span><span>Nova linha (na tabela de itens)</span></li>
+      <li><span><kbd>Shift</kbd> + <kbd>Del</kbd></span><span>Remover linha actual</span></li>
+      <li><span><kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>&minus;</kbd></span><span>Aproximar / afastar</span></li>
+      <li><span><kbd>Ctrl</kbd> + <kbd>0</kbd></span><span>Zoom a 100%</span></li>
+      <li><span><kbd>Ctrl</kbd> + <kbd>roda</kbd></span><span>Zoom sobre a pré-visualização</span></li>
+      <li><span><kbd>Esc</kbd></span><span>Sair do modo expandido / fechar</span></li>
+    </ul>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="invoice-template.js"></script>
+<script src="renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "gerador-faturas-dokama",
+  "version": "1.0.0",
+  "description": "Gerador de Facturas Pro-Forma DOKAMA - preenche dados do cliente/produtos e exporta em PDF",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "author": "DOKAMA",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.dokama.geradorfaturas",
+    "productName": "Gerador de Facturas DOKAMA",
+    "files": [
+      "**/*",
+      "!test/**"
+    ],
+    "win": {
+      "target": "portable"
+    },
+    "portable": {
+      "artifactName": "GeradorFaturasDOKAMA.exe"
+    }
+  }
+}
